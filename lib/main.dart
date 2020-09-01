@@ -37,6 +37,7 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
   bool Done = false;
   Color DoneButton;
   String va = '0';
+  String startText;
   AnimationController first_controller;
   AnimationController second_controller;
   AnimationController third_controller;
@@ -102,6 +103,7 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
     result = 0;
     Done = false;
     DoneButton = Colors.blueAccent;
+    startText = 'START';
     start();
   }
  void DN(){
@@ -228,14 +230,19 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                         child:
                                         FloatingActionButton(child:
                                             Padding(padding:EdgeInsets.only(bottom: 0)
-                                                ,child:Text('?',style: TextStyle(fontSize: 30),))
+                                                ,child:Text('👆',
+                                                  style: TextStyle(fontSize: 70,color: Colors.deepPurple),textAlign:TextAlign.center,
+                                                )
+                                            )
                                                 ,heroTag: "btn4"
                                             ,backgroundColor: Color.fromARGB(250,
                                             (answerRed*2.55).toInt(), (answerGreen*2.55).toInt(), (answerBlue*2.55).toInt()),
-                                                onPressed: () { first_controller
-                                                  ..reset()
-                                                  ..forward();
-                                                start();}
+                                                onPressed: () {
+                                                setState(() {
+                                                  startText = 'RESTART';
+
+                                                });
+                                            }
                                                         ),
                                       )
                                   )
@@ -483,8 +490,6 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                   )
                 ]
               )
-            ,
-
           ],
         ),
             Padding(
@@ -516,7 +521,6 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                   )
                             ),
                             Align(alignment: Alignment.center,
-
                                 child:SizedBox(
                                     width: 45.0,
                                     height: 200.0,
@@ -526,7 +530,6 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                       ,),
                                       color: Color.fromARGB(255, 0, 255, 0),)
                                 )
-
                             )
                             ,Align(alignment: Alignment.centerRight,
 
@@ -550,15 +553,15 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                           SizedBox(
                             width: 300.0,
                             height: 70.0,
-                            child:SlideTransition(
-                            position: Tween<Offset>(begin: Offset.zero, end: Offset(0.0, 1.7))
-                                .animate(second_controller),
+                            child:ScaleTransition(alignment: Alignment.bottomCenter,
+                            scale: forth_fade,
                             child:
                               MaterialButton(color: Colors.lightGreen
                                 ,child:Text('start',style: TextStyle(color: Colors.white,fontSize: 30),),
                                 onPressed: (){setState(() {
                                   //Done = !Done;
                                   second_controller..reset()..forward();
+                                  start();
                                 });},
                               )
                             ),
