@@ -41,12 +41,15 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
   String startText;
   bool DoneShow;
   double pickerWidth = 350.0;
+  Alignment qc ;
+  AnimationController zero_controller;
   AnimationController first_controller;
   AnimationController second_controller;
   AnimationController third_controller;
   AnimationController forth_controller;
   AnimationController fivth_controller;
   AnimationController sixth_controller;
+  Animation<double> zero_scale;
   Animation<double> first_rotate;
   Animation<double> second_scale;
   Animation<double> third_scale;
@@ -57,8 +60,14 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
   Animation<double> eaith_fade;
   Animation<double> ninth_fade;
   Animation<double> tenth_fade;
+  Animation<double> eleventh_scale;
+  Animation<double> towelvth_scale;
   void initState() {
     super.initState();
+    zero_controller = AnimationController(
+      duration: Duration(milliseconds: 200),
+      vsync: this,
+    );
     first_controller = AnimationController(
       duration: Duration(milliseconds: 200),
       vsync: this,
@@ -83,6 +92,10 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
       duration: Duration(milliseconds: 200),
       vsync: this,
     );
+    zero_scale = CurvedAnimation(
+      parent: zero_controller,
+      curve: Curves.linear,
+    ).drive(Tween(begin: 0, end: 5));
     first_rotate = CurvedAnimation(
       parent: first_controller,
       curve: Curves.linear,
@@ -115,7 +128,11 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
       parent: forth_controller,
       curve: Curves.linear,
     ).drive(Tween(begin: 1, end: 0))..addStatusListener((AnimationStatus status) {
-      new Stream.periodic(const Duration(seconds: 1), (_) =>fivth_controller..reset()..forward()).first.then((_)=>sixth_controller..reset()..forward());
+      if(status == AnimationStatus.completed)
+      new Stream.periodic(const Duration(seconds: 1), (_) =>{fivth_controller..reset()..forward()})
+          .first.then((_)=>{new Stream.periodic(const Duration(seconds: 1), (_) =>{sixth_controller..reset()..forward()})
+          .first.then((_)=>{})
+          }) ;
        // fivth_controller..reset()..forward();
     });
     ninth_fade =CurvedAnimation(
@@ -126,6 +143,14 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
       parent: sixth_controller,
       curve: Curves.linear,
     ).drive(Tween(begin: 0, end: 1));
+    eleventh_scale =CurvedAnimation(
+      parent: sixth_controller,
+      curve: Curves.linear,
+    ).drive(Tween(begin: 0.2, end: 0.5));
+    towelvth_scale =CurvedAnimation(
+      parent: sixth_controller,
+      curve: Curves.linear,
+    ).drive(Tween(begin: 0.9, end: 0.5));
     questionCircleRed = 0;
     questionCircleGreen = 0;
     questionCircleBlue = 0;
@@ -151,6 +176,8 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
     DoneButton = Colors.blueAccent;
     startText = 'START';
     DoneShow =false;
+    qc= Alignment.center;
+    zero_controller..reset()..forward();
     start();
   }
  void DN(){
@@ -287,57 +314,66 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                   SizedBox(height: 300,width: 300,
                                       child:
                                       ScaleTransition(alignment: Alignment.topRight,
-                                        scale: third_scale,
-                                        child:
-                                        FloatingActionButton(child:
-                                            Padding(padding:EdgeInsets.only(bottom: 0)
-                                                ,child:Text('',
-                                                  style: TextStyle(fontSize: 70,color: Colors.deepPurple),textAlign:TextAlign.center,
+                                        scale: towelvth_scale,
+                                        child: 
+                                          ScaleTransition(alignment: Alignment.topRight,
+                                            scale: third_scale,
+                                            child:
+                                            FloatingActionButton(child:
+                                                Padding(padding:EdgeInsets.only(bottom: 0)
+                                                    ,child:Text('',
+                                                      style: TextStyle(fontSize: 70,color: Colors.deepPurple),textAlign:TextAlign.center,
+                                                    )
                                                 )
-                                            )
-                                                ,heroTag: "btn4"
-                                            ,backgroundColor: Color.fromARGB(250,
-                                            (answerRed*2.55).toInt(), (answerGreen*2.55).toInt(), (answerBlue*2.55).toInt()),
-                                                onPressed: () {
-                                                setState(() {
-                                                  startText = 'RESTART';
-
-                                                });
-                                            }
-                                                        ),
-                                      )
+                                                    ,heroTag: "btn4"
+                                                ,backgroundColor: Color.fromARGB(250,
+                                                (answerRed*2.55).toInt(), (answerGreen*2.55).toInt(), (answerBlue*2.55).toInt()),
+                                                    onPressed: () {
+                                                    setState(() {
+                                                      startText = 'RESTART';
+    
+                                                    });
+                                                }
+                                                )
+                                            ,),
+                                          )
                                   )
                               ),
                               RotationTransition(
                                   turns: first_rotate,
                                   child:
-                                  ScaleTransition(
-                                      alignment: Alignment.bottomLeft,
-                                      scale: second_scale,
+                                      ScaleTransition(
+                                          scale: zero_scale,
                                       child:
-                                      Align(child:
-                                        SizedBox(
-                                            width: 300.0,
-                                            height: 300.0,
-                                            child:
-                                            FloatingActionButton(child:
-                                              Padding(padding:EdgeInsets.only(bottom: 40)
-                                                  ,child:FadeTransition(opacity: forth_fade,
-                                                      child:
-                                                      Text('↺',style: TextStyle(fontSize: 150),)
+                                              ScaleTransition(
+                                                  alignment: Alignment.bottomLeft,
+                                                  scale: second_scale,
+                                                  child:
+                                                  Align(child:
+                                                    SizedBox(
+                                                        width: 300.0,
+                                                        height: 300.0,
+                                                        child:
+                                                        FloatingActionButton(child:
+                                                          Padding(padding:EdgeInsets.only(bottom: 40)
+                                                              ,child:FadeTransition(opacity: forth_fade,
+                                                                  child:
+                                                                  Text('↺',style: TextStyle(fontSize: 150),)
+                                                              )
+                                                          )
+                                                            ,heroTag: "btn1"
+                                                            ,backgroundColor: Color.fromARGB(255, (questionCircleRed*2.55).toInt(),
+                                                                (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
+                                                            onPressed: () { first_controller
+                                                              ..reset()
+                                                              ..forward();
+                                                            start();}
+                                                            )
+                                                    )
                                                   )
-                                              )
-                                                ,heroTag: "btn1"
-                                                ,backgroundColor: Color.fromARGB(255, (questionCircleRed*2.55).toInt(),
-                                                    (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
-                                                onPressed: () { first_controller
-                                                  ..reset()
-                                                  ..forward();
-                                                start();}
-                                                )
-                                        )
-                                      )
-                                  )
+
+                                          )
+                                      ),
                               )
                             ],
                           )
@@ -534,53 +570,56 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                 ),
                             ),
                         ),
-                        FadeTransition(opacity: tenth_fade,
-                          child:
-                          Align(alignment: Alignment.centerLeft,
-                            child:
-                            SizedBox(
-                              width: 150.0,
-                              height: 50.0,
+                        Padding(padding: EdgeInsets.only(top: 10),
+                        child: 
+                            FadeTransition(opacity: tenth_fade,
                               child:
-
-                              Stack(
-                                children: <Widget>[
-
-                                  Align(alignment: Alignment.centerLeft,
-                                      child: SizedBox(
-                                        width: 45.0,
-                                        height: 50.0,
-                                        child:Container(child:
-                                        Align(alignment: Alignment.center,child:
-                                        Text('$answerCircleRed',style: TextStyle(color: Colors.white),))
-                                          ,color: Color.fromARGB(255, 255, 0, 0),),)
+                              Align(alignment: Alignment.centerLeft,
+                                child:
+                                SizedBox(
+                                  width: 150.0,
+                                  height: 50.0,
+                                  child:
+    
+                                  Stack(
+                                    children: <Widget>[
+    
+                                      Align(alignment: Alignment.centerLeft,
+                                          child: SizedBox(
+                                            width: 45.0,
+                                            height: 50.0,
+                                            child:Container(child:
+                                              Align(alignment: Alignment.center,child:
+                                                Text('$answerCircleRed',style: TextStyle(color: Colors.white),))
+                                                  ,color: Color.fromARGB(255, 255, 0, 0),),)
+                                      ),
+                                      Align(alignment: Alignment.center,
+                                          child: SizedBox(
+                                            width: 45.0,
+                                            height: 50.0,
+                                            child:Container(child:
+                                            Align(alignment: Alignment.center,child:
+                                            Text('$answerCircleGreen',style: TextStyle(color: Colors.white),)),
+                                              color: Color.fromARGB(255, 0, 255, 0),
+                                            ),
+                                          )
+                                      ),
+                                      Align(alignment: Alignment.centerRight,
+                                          child: SizedBox(
+                                            width: 45.0,
+                                            height: 50.0,
+                                            child:Container(child:
+                                            Align(alignment: Alignment.center,child:
+                                            Text('$answerCircleBlue',style: TextStyle(color: Colors.white),)),
+                                              color: Color.fromARGB(255, 0, 0, 255),),
+                                          )
+                                      ),
+    
+                                    ],
                                   ),
-                                  Align(alignment: Alignment.center,
-                                      child: SizedBox(
-                                        width: 45.0,
-                                        height: 50.0,
-                                        child:Container(child:
-                                        Align(alignment: Alignment.center,child:
-                                        Text('$answerCircleGreen',style: TextStyle(color: Colors.white),)),
-                                          color: Color.fromARGB(255, 0, 255, 0),
-                                        ),
-                                      )
-                                  ),
-                                  Align(alignment: Alignment.centerRight,
-                                      child: SizedBox(
-                                        width: 45.0,
-                                        height: 50.0,
-                                        child:Container(child:
-                                        Align(alignment: Alignment.center,child:
-                                        Text('$answerCircleBlue',style: TextStyle(color: Colors.white),)),
-                                          color: Color.fromARGB(255, 0, 0, 255),),
-                                      )
-                                  ),
-
-                                ],
+                                ),
                               ),
                             ),
-                          ),
                         ),
                               Align(alignment: Alignment.centerRight,
                                 child:
