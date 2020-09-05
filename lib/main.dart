@@ -371,20 +371,28 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                                                   width: 300.0,
                                                                   height: 300.0,
                                                                   child:
-                                                                  FloatingActionButton(child:
-                                                                    Padding(padding:EdgeInsets.only(bottom: 40)
-                                                                        ,child:FadeTransition(opacity: forth_fade,
-                                                                            child:
-                                                                            Text('↺',style: TextStyle(fontSize: 150),)
+                                                                      Container(child:
+                                                                          Visibility(visible: !Done, child:
+                                                                        FloatingActionButton(child:
+                                                                          Padding(padding:EdgeInsets.only(bottom: 40)
+                                                                              ,child:FadeTransition(opacity: forth_fade,
+                                                                                  child:
+                                                                                  Text('↺',style: TextStyle(fontSize: 150),)
+                                                                              )
+                                                                          )
+                                                                            ,heroTag: "btn1"
+                                                                            ,backgroundColor: Color.fromARGB(0, (questionCircleRed*2.55).toInt(),
+                                                                                (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
+                                                                            onPressed: () { if(!Done){
+                                                                            first_controller..reset()..forward();
+                                                                            start();}}
+                                                                            ),),
+                                                                          decoration: BoxDecoration(
+                                                                            shape: BoxShape.circle,
+                                                                            color:Color.fromARGB(255, (questionCircleRed*2.55).toInt(),
+                                                                                (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
+                                                                          ),
                                                                         )
-                                                                    )
-                                                                      ,heroTag: "btn1"
-                                                                      ,backgroundColor: Color.fromARGB(255, (questionCircleRed*2.55).toInt(),
-                                                                          (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
-                                                                      onPressed: () { if(!Done){
-                                                                      first_controller..reset()..forward();
-                                                                      start();}}
-                                                                      )
                                                               )
                                                             )
                                                         ,)
