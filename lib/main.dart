@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -36,6 +36,7 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
   bool percent;
   bool point_score;
   bool Done = false;
+  bool finish = false;
   Color DoneButton;
   String va = '0';
   String startText;
@@ -65,6 +66,7 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
   Animation<double> eleventh_fade;
   Animation<double> towelvth_fade;
   Animation<double> therteenth_scale;
+  Animation<double> fourteen_scale;
   void initState() {
     super.initState();
     zero_controller = AnimationController(
@@ -114,11 +116,11 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
     second_scale =CurvedAnimation(
       parent: second_controller,
       curve: Curves.linear,
-    ).drive(Tween(begin: 1, end: 0.2));
+    ).drive(Tween(begin: 1, end: 0.15));
     third_scale =CurvedAnimation(
       parent: second_controller,
       curve: Curves.linear,
-    ).drive(Tween(begin: 0, end: 0.9));
+    ).drive(Tween(begin: 0, end: 1));
     forth_fade =CurvedAnimation(
       parent: second_controller,
       curve: Curves.linear,
@@ -175,9 +177,13 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
       curve: Curves.linear,
     ).drive(Tween(begin: 0, end: 1));
     therteenth_scale =CurvedAnimation(
-      parent: sixth_controller,
+      parent: forth_controller,
       curve: Curves.linear,
-    ).drive(Tween(begin: 0.9, end: 1.2));
+    ).drive(Tween(begin: 0.9, end: 2));
+    fourteen_scale =CurvedAnimation(
+      parent: forth_controller,
+      curve: Curves.linear,
+    ).drive(Tween(begin: 1, end: 4));
     questionCircleRed = 0;
     questionCircleGreen = 0;
     questionCircleBlue = 0;
@@ -200,6 +206,7 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
     point = 0;
     result = 0;
     Done = false;
+    finish = false;
     DoneButton = Colors.blueAccent;
     startText = 'START';
     DoneShow =false;
@@ -328,15 +335,15 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                     children: <Widget>[
 
                       SizedBox(
-                          width: 300.0,
-                          height: 300.0,
+                          width: 250.0,
+                          height: 250.0,
                           child:Stack(children:
                             <Widget>[
                               Align(alignment: Alignment.topRight,
                                   child:
-                                  SizedBox(height: 300,width: 300,
+                                  SizedBox(height: 250,width: 250,
                                       child:
-                                      ScaleTransition(alignment: Alignment.topRight, scale: therteenth_scale,
+                                      ScaleTransition(alignment: Alignment.bottomCenter, scale: therteenth_scale,
                                           child:
                                           ScaleTransition(alignment: Alignment.topRight,
                                             scale: third_scale,
@@ -344,7 +351,7 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                             Container(
                                                 decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
-                                                  color: Color.fromARGB(250,
+                                                  color: Color.fromARGB(255,
                                                       (answerRed*2.55).toInt(), (answerGreen*2.55).toInt(), (answerBlue*2.55).toInt()),
                                                 ),
                                                 )
@@ -361,44 +368,128 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                           scale: zero_scale,
                                       child:
 
-                                              ScaleTransition(
-                                                  alignment: Alignment.bottomLeft,
-                                                  scale: second_scale,
-                                                  child:
+                                          ScaleTransition(
+                                              alignment: Alignment.bottomLeft,
+                                              scale: second_scale,
+                                              child:
+                                              ScaleTransition(alignment: Alignment.center, scale: fourteen_scale,
+                                                child:
+                                              Align(child:
+                                                SizedBox(
+                                                    width: 250.0,
+                                                    height: 250.0,
+                                                    child:
+                                                    Container(child:
+                                                    FadeTransition(opacity: forth_fade,
+                                                        child:
+                                                      FloatingActionButton(child:
+                                                        Padding(padding:EdgeInsets.only(bottom: 40)
+                                                            ,child:
+                                                                Text('↺',style: TextStyle(fontSize: 150),)
 
-                                                            Align(child:
-                                                              SizedBox(
-                                                                  width: 300.0,
-                                                                  height: 300.0,
-                                                                  child:
-                                                                      Container(child:
-                                                                          Visibility(visible: !Done, child:
-                                                                        FloatingActionButton(child:
-                                                                          Padding(padding:EdgeInsets.only(bottom: 40)
-                                                                              ,child:FadeTransition(opacity: forth_fade,
-                                                                                  child:
-                                                                                  Text('↺',style: TextStyle(fontSize: 150),)
-                                                                              )
-                                                                          )
-                                                                            ,heroTag: "btn1"
-                                                                            ,backgroundColor: Color.fromARGB(0, (questionCircleRed*2.55).toInt(),
-                                                                                (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
-                                                                            onPressed: () { if(!Done){
-                                                                            first_controller..reset()..forward();
-                                                                            start();}}
-                                                                            ),),
-                                                                          decoration: BoxDecoration(
-                                                                            shape: BoxShape.circle,
-                                                                            color:Color.fromARGB(255, (questionCircleRed*2.55).toInt(),
-                                                                                (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
-                                                                          ),
-                                                                        )
-                                                              )
-                                                            )
-                                                        ,)
+                                                        )
+                                                          ,heroTag: "btn1"
+                                                          ,backgroundColor: Color.fromARGB(0, (questionCircleRed*2.55).toInt(),
+                                                              (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
+                                                          onPressed: () { if(!Done){
+                                                            SystemSound.play(SystemSoundType.click);
+                                                          first_controller..reset()..forward();
+                                                          start();}}
+                                                          ),),
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color:Color.fromARGB(255, (questionCircleRed*2.55).toInt(),
+                                                              (questionCircleGreen*2.55).toInt(), (questionCircleBlue*2.55).toInt()),
+                                                        ),
+                                                      )
+                                                )
+                                              )
+                                          ,)
 
                                       ),
-                              )
+                              ),),
+                              FadeTransition(opacity: ninth_fade,
+                                child:
+                                Align(alignment: Alignment.topRight,
+                                  child:
+                                  SizedBox(
+                                      width: 125.0,
+                                      height: 125.0,
+                                      child:
+                                      Container(decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color.fromARGB(10, 255, 255, 255),
+                                      ),
+                                        child:
+                                            Column(crossAxisAlignment: CrossAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Text('جواب شما 👨',style: TextStyle(fontSize: 10,color: Colors.white),),
+                                                Stack(
+                                                  children: <Widget>[
+                                                    //Align(alignment: Alignment.topCenter,child: Text('جواب شما 👨',style: TextStyle(fontSize: 10,color: Colors.white),),),
+                                                    Align(alignment: Alignment.bottomLeft,
+                                                        child:Padding(padding: EdgeInsets.only(left: 10,bottom: 4),
+                                                          child:
+                                                          SizedBox(
+                                                            width: 30.0,
+                                                            height: 30.0,
+                                                            child:Container(child:
+                                                            Align(alignment: Alignment.center,child:
+                                                            Text('$answerCircleRed',style: TextStyle(color: Colors.white),))
+                                                              ,
+                                                              decoration: BoxDecoration(
+                                                                shape: BoxShape.circle,
+                                                                color: Color.fromARGB(255, 255, 0, 0),
+                                                              ),
+
+                                                            ),
+                                                          ),
+                                                        )
+                                                    ),
+                                                    Align(alignment: Alignment.bottomCenter,
+                                                        child:Padding(padding: EdgeInsets.only(bottom: 4),
+                                                            child:
+                                                            SizedBox(
+                                                              width: 30.0,
+                                                              height: 30.0,
+                                                              child:Container(child:
+                                                              Align(alignment: Alignment.center,child:
+                                                              Text('$answerCircleGreen',style: TextStyle(color: Colors.white),)),
+                                                                decoration: BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  color: Color.fromARGB(255, 0, 100, 0),
+                                                                ),
+                                                              ),
+                                                            )
+                                                        )
+                                                    ),
+                                                    Align(alignment: Alignment.bottomRight,
+                                                        child:Padding(padding: EdgeInsets.only(bottom: 4,right: 10),
+                                                            child:
+                                                            SizedBox(
+                                                              width: 30.0,
+                                                              height: 30.0,
+                                                              child:Container(child:
+                                                              Align(alignment: Alignment.center,child:
+                                                              Text('$answerCircleBlue',style: TextStyle(color: Colors.white),)),
+                                                                decoration: BoxDecoration(
+                                                                  shape: BoxShape.circle,
+                                                                  color: Color.fromARGB(255, 0, 0, 255),
+                                                                ),
+                                                              ),
+                                                            )
+                                                        )
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ]
+                                            )
+                                      )
+                                  ),
+                                ),
+                              ),
                             ],
                           )
 
@@ -417,104 +508,81 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                   child:
                   Stack(
                       children: <Widget>[
-                        FadeTransition(opacity: ninth_fade,
-                        child: 
-                            Align(alignment: Alignment.topLeft,
-                              child:
-                                SizedBox(
-                                  width: 150.0,
-                                  height: 40.0,
-                                  child:
-    
-                                  Stack(
-                                    children: <Widget>[
-    
-                                      Align(alignment: Alignment.centerLeft,
-                                          child: SizedBox(
-                                            width: 45.0,
-                                            height: 50.0,
-                                            child:Container(child:
-                                              Align(alignment: Alignment.center,child:
-                                                Text('$answerCircleRed',style: TextStyle(color: Colors.white),))
-                                              ,color: Color.fromARGB(255, 255, 0, 0),),)
-                                      ),
-                                      Align(alignment: Alignment.center,
-                                          child: SizedBox(
-                                            width: 45.0,
-                                            height: 50.0,
-                                            child:Container(child:
-                                              Align(alignment: Alignment.center,child:
-                                                Text('$answerCircleGreen',style: TextStyle(color: Colors.white),)),
-                                              color: Color.fromARGB(255, 0, 100, 0),
-                                            ),
-                                          )
-                                      ),
-                                      Align(alignment: Alignment.centerRight,
-                                          child: SizedBox(
-                                            width: 45.0,
-                                            height: 50.0,
-                                            child:Container(child:
-                                              Align(alignment: Alignment.center,child:
-                                                Text('$answerCircleBlue',style: TextStyle(color: Colors.white),)),
-                                              color: Color.fromARGB(255, 0, 0, 255),),
-                                          )
-                                      ),
-    
-                                    ],
-                                  ),
-                                ),
-                            ),
-                        ),
-                        Padding(padding: EdgeInsets.only(top: 0),
-                        child: 
                             FadeTransition(opacity: tenth_fade,
                               child:
                               Align(alignment: Alignment.centerLeft,
                                 child:
                                 SizedBox(
-                                  width: 150.0,
-                                  height: 40.0,
+                                  width: 125.0,
+                                  height: 125.0,
                                   child:
-    
-                                  Stack(
-                                    children: <Widget>[
-    
-                                      Align(alignment: Alignment.centerLeft,
-                                          child: SizedBox(
-                                            width: 45.0,
-                                            height: 50.0,
-                                            child:Container(child:
-                                              Align(alignment: Alignment.center,child:
-                                                Text('$questionCircleRed',style: TextStyle(color: Colors.white),))
-                                                  ,color: Color.fromARGB(255, 255, 0, 0),),)
-                                      ),
-                                      Align(alignment: Alignment.center,
-                                          child: SizedBox(
-                                            width: 45.0,
-                                            height: 50.0,
-                                            child:Container(child:
-                                            Align(alignment: Alignment.center,child:
-                                            Text('$questionCircleGreen',style: TextStyle(color: Colors.white),)),
-                                              color: Color.fromARGB(255, 0, 100, 0),
+                                  Container(
+                                    decoration:BoxDecoration(shape: BoxShape.circle,color: Color.fromARGB(20, 0, 0, 0))
+                                    ,
+                                    child:
+                                      Column(crossAxisAlignment: CrossAxisAlignment.center,
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Text('جواب درست ✓',style: TextStyle(color: Colors.white,fontSize: 10),),
+                                        Stack(
+                                          children: <Widget>[
+                                            Align(alignment: Alignment.bottomLeft,
+                                                child:
+                                                    Padding(padding: EdgeInsets.only(left: 10,bottom: 4), child:
+                                                      SizedBox(
+                                                        width: 30.0,
+                                                        height: 30.0,
+                                                        child:Container(child:
+                                                          Align(alignment: Alignment.center,child:
+                                                            Text('$questionCircleRed',style: TextStyle(color: Colors.white),))
+                                                              ,decoration: BoxDecoration(
+                                                            shape: BoxShape.circle,
+                                                            color: Color.fromARGB(255, 255, 0, 0),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    )
                                             ),
-                                          )
+                                            Align(alignment: Alignment.bottomCenter,
+                                                child:
+                                                Padding(padding: EdgeInsets.only(bottom: 4), child:
+                                                    SizedBox(
+                                                      width: 30.0,
+                                                      height: 30.0,
+                                                      child:Container(child:
+                                                      Align(alignment: Alignment.center,child:
+                                                      Text('$questionCircleGreen',style: TextStyle(color: Colors.white),)),
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: Color.fromARGB(255, 0, 100, 0),
+                                                        ),
+                                                      ),
+                                                    )
+                                                )
+                                            ),
+                                            Align(alignment: Alignment.bottomRight,
+                                                child:Padding(padding: EdgeInsets.only(right: 10,bottom: 4), child:
+                                                    SizedBox(
+                                                      width: 30.0,
+                                                      height: 30.0,
+                                                      child:Container(child:
+                                                      Align(alignment: Alignment.center,child:
+                                                      Text('$questionCircleBlue',style: TextStyle(color: Colors.white),)),
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: Color.fromARGB(255,0 , 0, 255),
+                                                        ),
+                                                      ),
+                                                    )
+                                                )
+                                            ),
+                                          ],)
+                                        ],
                                       ),
-                                      Align(alignment: Alignment.centerRight,
-                                          child: SizedBox(
-                                            width: 45.0,
-                                            height: 50.0,
-                                            child:Container(child:
-                                            Align(alignment: Alignment.center,child:
-                                            Text('$questionCircleBlue',style: TextStyle(color: Colors.white),)),
-                                              color: Color.fromARGB(255, 0, 0, 255),),
-                                          )
-                                      ),
-    
-                                    ],
-                                  ),
+                                  )
                                 ),
                               ),
-                            ),
+
                         ),
                         Padding(padding: EdgeInsets.only(top: 0),
                           child:
@@ -524,45 +592,64 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                               child:
                               SizedBox(
                                 width: 150.0,
-                                height: 40.0,
+                                height: 49.0,
                                 child:
+                                Container(color: Color.fromARGB(255, 150, 0, 0), child:
+                                    Stack(
+                                      children: <Widget>[
+                                        Align(alignment: Alignment.topCenter,child: Text('تفاوت',style: TextStyle(color: Colors.white,fontSize: 10),),),
+                                        Align(alignment: Alignment.bottomLeft,
+                                            child:Padding(padding: EdgeInsets.only(left: 10,bottom: 4), child:
+                                                SizedBox(
+                                                  width: 30.0,
+                                                  height: 30.0,
+                                                  child:Container(child:
+                                                    Align(alignment: Alignment.center,child:
+                                                      Text('$redDifference',style: TextStyle(color: Color.fromARGB(255, 255, 0, 0) ),))
+                                                    ,decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Color.fromARGB(255, 255, 255, 255),
+                                                    ),
+                                                  )
+                                                )
+                                            )
+                                        ),
+                                        Align(alignment: Alignment.bottomCenter,
+                                            child: Padding(padding: EdgeInsets.only(bottom: 4), child:
+                                                SizedBox(
+                                                  width: 30.0,
+                                                  height: 30.0,
+                                                  child:Container(child:
+                                                  Align(alignment: Alignment.center,child:
+                                                  Text('$greenDifference',style: TextStyle(color:Color.fromARGB(255, 0, 100, 0)),)),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Color.fromARGB(255, 255, 255, 255),
+                                                    ),
+                                                  ),
+                                                )
+                                            )
+                                        ),
+                                        Align(alignment: Alignment.bottomRight,
+                                            child: Padding(padding: EdgeInsets.only(right: 10,bottom: 4), child:
+                                                SizedBox(
+                                                  width: 30.0,
+                                                  height: 30.0,
+                                                  child:Container(child:
+                                                    Align(alignment: Alignment.center,child:
+                                                      Text('$blueDifference',style: TextStyle(color:Color.fromARGB(255, 0, 0, 255)),)),
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: Color.fromARGB(255, 255, 255, 255),
+                                                    ),
+                                                  ),
+                                                )
+                                            )
+                                        ),
 
-                                Stack(
-                                  children: <Widget>[
-
-                                    Align(alignment: Alignment.centerLeft,
-                                        child: SizedBox(
-                                          width: 45.0,
-                                          height: 50.0,
-                                          child:Container(child:
-                                          Align(alignment: Alignment.center,child:
-                                          Text('$redDifference',style: TextStyle(color: Color.fromARGB(255, 255, 0, 0) ),))
-                                            ,color:Colors.white,),)
+                                      ],
                                     ),
-                                    Align(alignment: Alignment.center,
-                                        child: SizedBox(
-                                          width: 45.0,
-                                          height: 50.0,
-                                          child:Container(child:
-                                          Align(alignment: Alignment.center,child:
-                                          Text('$greenDifference',style: TextStyle(color:Color.fromARGB(255, 0, 100, 0)),)),
-                                            color: Colors.white ,
-                                          ),
-                                        )
-                                    ),
-                                    Align(alignment: Alignment.centerRight,
-                                        child: SizedBox(
-                                          width: 45.0,
-                                          height: 50.0,
-                                          child:Container(child:
-                                          Align(alignment: Alignment.center,child:
-                                          Text('$blueDifference',style: TextStyle(color:Color.fromARGB(255, 0, 0, 255)),)),
-                                            color: Colors.white ,),
-                                        )
-                                    ),
-
-                                  ],
-                                ),
+                                )
                               ),
                             ),
                           ),
@@ -631,8 +718,9 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                             scale: forth_fade,
                             child:
                               MaterialButton(color: Colors.lightGreen
-                                ,child:Text('start',style: TextStyle(color: Colors.white,fontSize: 30),),
+                                ,child:Text('✓',style: TextStyle(color: Colors.white,fontSize: 30),),
                                 onPressed: (){setState(() {
+                                  SystemSound.play(SystemSoundType.click);
                                   Done = !Done;
                                   second_controller..reset()..forward();
                                 });},
@@ -655,9 +743,14 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                   child:
                                   FloatingActionButton(onPressed: () {
                                     setState(() {
+                                      if(!finish){
+                                        SystemSound.play(SystemSoundType.click);
                                       DN();
                                     pickerWidth =200;
                                     forth_controller..reset()..forward();
+                                    finish = true;
+
+                                      }
                                     });
                                     },
                                     child: Text('✓',style: TextStyle(fontSize: 50),),)
@@ -675,7 +768,11 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                                     child:
                                     FloatingActionButton(onPressed: () {
                                       setState(() {
-                                        Phoenix.rebirth(context);
+                                        if(finish) {
+                                          SystemSound.play(
+                                              SystemSoundType.click);
+                                          Phoenix.rebirth(context);
+                                        }
                                       });
                                     },
                                       child: Text('↺',style: TextStyle(fontSize: 50),),)
@@ -685,12 +782,23 @@ class _CounterState extends State<Counter> with TickerProviderStateMixin{
                       ),
                       FadeTransition(opacity: towelvth_fade,
                           child:
-                          Align(alignment: Alignment.bottomLeft,
+                          Align(alignment: Alignment.topLeft,
                               child:
-                              Padding(padding: EdgeInsets.only(left: 80,top: 20),
+                              Padding(padding: EdgeInsets.only(left: 40),
                                 child:
-                                Text('$result',style: TextStyle(fontSize: 50),)
+                                    SizedBox(height: 100,width: 100, child:
+                                        Container(decoration: BoxDecoration(shape:BoxShape.circle,color: Colors.deepPurple ),
+                                          child:
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: <Widget>[
 
+                                              Text('کوربینی شما',style: TextStyle(fontSize: 15,color: Colors.white),),
+                                              Text('$result',style: TextStyle(fontSize: 40,color: Colors.white),)
+                                            ],)
+                                          ,)
+                                      ,)
                               )
                           )
                       )
